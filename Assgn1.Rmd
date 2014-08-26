@@ -13,7 +13,7 @@ opts_chunk$set(cache=TRUE)
 Download and read data into R:
 ```{r}
 fileurl <- 'http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip'
-download.file(fileurl, destfile = 'mon.zip')
+if(!file.exists('mon.zip')) {download.file(fileurl, destfile = 'mon.zip')}
 downdate <- date()
 data <- read.csv(unz('mon.zip','activity.csv'))
 ```
@@ -27,9 +27,9 @@ data$date <- as.Date(as.character(data$date),format='%Y-%m-%d') #convert to Date
 
 ##Data Analysis
 ###Part1
-What is mean total number of steps taken per day?
-- Historgram for total number of steps per day
-- Mean and median of total number of steps per day
+What is mean total number of steps taken per day?  
+* Historgram for total number of steps per day  
+* Mean and median of total number of steps per day  
 ```{r}
 p1<- ggplot(data=data[data$steps!=0,],aes(x=log(steps)))
 p1<- p1+geom_histogram()
@@ -39,4 +39,20 @@ outmat <- matrix(nrow=length(unique(data$date)),ncol=2,dimnames = list(as.charac
 mm <- sapply(list('mean','median'),function(x){ tmp<-tapply(data$steps, data$date, x,na.rm=T); outmat[,x]<<- tmp})
 outmat
 ```
+
+###part2
+What is the average daily activity pattern?  
+* time series plot (interval vs mean number of steps)    
+* which time interval contains the maximum number of steps
+```{r}
+t<-tapply(data$steps,data$interval,mean,na.rm=T)
+which.max(t)
+df <-data.frame(t) #converting t to dataframe for plotting purposes
+df$inv <- as.numeric(rownames(df))
+p2 <-ggplot(data=df,aes(x=inv,y=t))
+p2<- p2+geom_line()
+p2<- p2+labs(x='Interval',y='average number of steps')
+p2
+```
+
 
