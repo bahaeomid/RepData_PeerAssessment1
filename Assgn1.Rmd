@@ -1,14 +1,24 @@
 Activity Monitoring
 ========================
+<<<<<<< HEAD
 
 load required packages:
 ```{r, echo=FALSE,results='hide',warning=FALSE}
+=======
+load required packages:
+```{r}
+>>>>>>> 5fa920e70c75a5c9c75b3bea0bd885958ea415c5
 required <- c('ggplot2','knitr')
 lapply(required,require,character.only=TRUE)
 ```
 
+<<<<<<< HEAD
 ```{r setoptions, echo=FALSE, results='hide'}
 opts_chunk$set(cache=TRUE,warning=FALSE,message=FALSE)
+=======
+```{r setoptions, echo=FALSE}
+opts_chunk$set(cache=TRUE)
+>>>>>>> 5fa920e70c75a5c9c75b3bea0bd885958ea415c5
 ```
 
 Download and read data into R:
@@ -30,6 +40,7 @@ data$date <- as.Date(as.character(data$date),format='%Y-%m-%d') #convert to Date
 ###Part1
 What is mean total number of steps taken per day?  
 * Historgram for total number of steps per day  
+<<<<<<< HEAD
 * Mean and median of total number of steps per day 
 ```{r}
 tsum<- tapply(data$steps,data$date,sum,na.rm=T)
@@ -43,15 +54,34 @@ mm <- sapply(list('mean','median'),function(x){ tmp<-tapply(data$steps, data$dat
 outmat #mean and median per day
 mean(dfsum$tsum) #mean of total number of steps for the entire dataset
 median(dfsum$tsum) #median of total number of steps for the entire dataset
+=======
+* Mean and median of total number of steps per day  
+```{r}
+p1<- ggplot(data=data[data$steps!=0,],aes(x=log(steps)))
+p1<- p1+geom_histogram()
+p1<- p1+labs(x='log(Number of Steps)',y='Frequency')
+p1
+outmat <- matrix(nrow=length(unique(data$date)),ncol=2,dimnames = list(as.character(unique(data$date)),c('mean','median')))
+mm <- sapply(list('mean','median'),function(x){ tmp<-tapply(data$steps, data$date, x,na.rm=T); outmat[,x]<<- tmp})
+outmat
+>>>>>>> 5fa920e70c75a5c9c75b3bea0bd885958ea415c5
 ```
 
 ###part2
 What is the average daily activity pattern?  
+<<<<<<< HEAD
 * time series plot (interval vs mean number of steps)  
 * which time interval contains the maximum number of steps  
 ```{r}
 t<-tapply(data$steps,data$interval,mean,na.rm=T)
 t[which.max(t)]
+=======
+* time series plot (interval vs mean number of steps)    
+* which time interval contains the maximum number of steps
+```{r}
+t<-tapply(data$steps,data$interval,mean,na.rm=T)
+which.max(t)
+>>>>>>> 5fa920e70c75a5c9c75b3bea0bd885958ea415c5
 df <-data.frame(t) #converting t to dataframe for plotting purposes
 df$inv <- as.numeric(rownames(df))
 p2 <-ggplot(data=df,aes(x=inv,y=t))
@@ -60,6 +90,7 @@ p2<- p2+labs(x='Interval',y='average number of steps')
 p2
 ```
 
+<<<<<<< HEAD
 ###Part3
 * total number of missing values  
 * impute the missing data  
@@ -125,3 +156,6 @@ p4 <- ggplot(data=t1,aes(x=interval,y=steps))
 p4 <- p4+geom_line()+facet_grid(wday~.)
 p4
 ```
+=======
+
+>>>>>>> 5fa920e70c75a5c9c75b3bea0bd885958ea415c5
