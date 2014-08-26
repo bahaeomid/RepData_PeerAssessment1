@@ -1,0 +1,42 @@
+Activity Monitoring
+========================
+load required packages:
+```{r}
+required <- c('ggplot2','knitr')
+lapply(required,require,character.only=TRUE)
+```
+
+```{r setoptions, echo=FALSE}
+opts_chunk$set(cache=TRUE)
+```
+
+Download and read data into R:
+```{r}
+fileurl <- 'http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip'
+download.file(fileurl, destfile = 'mon.zip')
+downdate <- date()
+data <- read.csv(unz('mon.zip','activity.csv'))
+```
+Data was downloaded from link above on `r downdate`.
+
+##Data Cleaning
+```{r}
+str(data) #look at data
+data$date <- as.Date(as.character(data$date),format='%Y-%m-%d') #convert to Date format
+```
+
+##Data Analysis
+###Part1
+What is mean total number of steps taken per day?
+- Historgram for total number of steps per day
+- Mean and median of total number of steps per day
+```{r}
+p1<- ggplot(data=data[data$steps!=0,],aes(x=log(steps)))
+p1<- p1+geom_histogram()
+p1<- p1+labs(x='log(Number of Steps)',y='Frequency')
+p1
+outmat <- matrix(nrow=length(unique(data$date)),ncol=2,dimnames = list(as.character(unique(data$date)),c('mean','median')))
+mm <- sapply(list('mean','median'),function(x){ tmp<-tapply(data$steps, data$date, x,na.rm=T); outmat[,x]<<- tmp})
+outmat
+```
+
